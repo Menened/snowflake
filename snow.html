@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Счётчик дней</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+        }
+
+        .counter {
+            text-align: center;
+            padding: 40px 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            max-width: 90vw;
+        }
+
+        .number {
+            font-size: clamp(60px, 10vw, 90px);
+            font-weight: 700;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .text {
+            font-size: clamp(18px, 3vw, 24px);
+            margin-top: 10px;
+            opacity: 0.9;
+            letter-spacing: 0.3px;
+            line-height: 1.4;        }
+
+        .heart {
+            font-size: 32px;
+            margin-top: 20px;
+            animation: pulse 1.2s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="counter">
+        <div class="number" id="days"></div>
+        <div class="text" id="word"></div>
+        <div class="heart">❤️</div>
+    </div>
+
+    <script>
+        // 1. Получаем текущее время устройства
+        const now = new Date();
+        // 2. Сдвигаем его строго на UTC+7 (420 минут)
+        const utc7 = new Date(now.getTime() + (now.getTimezoneOffset() + 7 * 60) * 60 * 1000);
+        
+        // 3. Формируем "чистые" даты без времени для точного расчёта дней
+        const todayUTC7 = new Date(Date.UTC(utc7.getUTCFullYear(), utc7.getUTCMonth(), utc7.getUTCDate()));
+        const startDate = new Date(Date.UTC(2026, 2, 11));
+
+        // 4. Считаем разницу
+        const diffDays = Math.floor((todayUTC7 - startDate) / (1000 * 60 * 60 * 24));
+
+        // Склонение слова "день"
+        function declineDays(n) {
+            const abs = Math.abs(n) % 100;
+            const last = abs % 10;
+            if (abs > 10 && abs < 20) return 'дней';
+            if (last === 1) return 'день';
+            if (last >= 2 && last <= 4) return 'дня';
+            return 'дней';
+        }
+
+        // Вывод на страницу
+        document.getElementById('days').textContent = diffDays;
+        document.getElementById('word').textContent = 
+            `${diffDays} ${declineDays(diffDays)} жду, когда это будем мы`;    </script>
+
+</body>
+</html>
